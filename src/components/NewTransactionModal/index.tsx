@@ -1,9 +1,9 @@
-import { useContext } from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { ArrowCircleDown, ArrowCircleUp, X } from "phosphor-react";
-import * as z from "zod";
+import { useContextSelector } from "use-context-selector";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import * as Dialog from "@radix-ui/react-dialog";
+import * as z from "zod";
+import { ArrowCircleDown, ArrowCircleUp, X } from "phosphor-react";
 import { TransactionsContext } from "../../contexts/TransactionsContext";
 
 import {
@@ -34,7 +34,12 @@ export function NewTrasactionModal() {
       type: "income",
     },
   });
-  const { createTransaction } = useContext(TransactionsContext);
+  const createTransaction = useContextSelector(
+    TransactionsContext,
+    (context) => {
+      return context.createTransaction;
+    }
+  );
   async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
     createTransaction(data);
     reset();

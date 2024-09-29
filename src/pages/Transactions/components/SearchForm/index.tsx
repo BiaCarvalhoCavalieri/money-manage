@@ -1,19 +1,26 @@
+import { memo } from "react";
+import { useContextSelector } from "use-context-selector";
 import { MagnifyingGlass } from "phosphor-react";
-import { SearchFormContainer } from "./styles";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
 import { TransactionsContext } from "../../../../contexts/TransactionsContext";
+
+import { SearchFormContainer } from "./styles";
 
 const searchFormSchema = z.object({
   query: z.string(),
 });
 
 type SearchFormInputs = z.infer<typeof searchFormSchema>;
-
-export function SearchForm() {
-  const { fetchTransactions } = useContext(TransactionsContext);
+// Example of memo, should only be used in components with extensive HTML render, is not this case, only left as example of usage
+function SearchFormComponent() {
+  const fetchTransactions = useContextSelector(
+    TransactionsContext,
+    (context) => {
+      return context.fetchTransactions;
+    }
+  );
   const {
     register,
     handleSubmit,
@@ -40,3 +47,5 @@ export function SearchForm() {
     </SearchFormContainer>
   );
 }
+
+export const SearchForm = memo(SearchFormComponent);
